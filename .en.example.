@@ -1,0 +1,6 @@
+ADMIN_EMAIL=you@example.com
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=stacy.haulnation.ai@gmail.com
+SMTP_PASS=APP_PASSWORD
+ALLOWED_ORIGIN=https://your-frontend.netlify.app
