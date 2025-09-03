@@ -1,10 +1,16 @@
+// Stacy = Dispatch (quotes, loads, driver/customer handling)
 export class StacyAI {
   reply(text) {
-    const t = text.toLowerCase();
-    if (/quote|load|driver|dispatch/.test(t))
-      return "Stacy: I can help with dispatch. Share pickup, dropoff, and load details.";
-    if (/dispute|problem|complaint/.test(t))
-      return "Stacy: Logging this issue. Escalating if needed.";
-    return "Stacy: How can I help with dispatch today?";
+    const t = (text || "").toLowerCase();
+    if (/\b(quote|rate|price|book|load|dispatch|driver|onboard)\b/.test(t))
+      return "Stacy: I can help with dispatch & quotes. Please share pickup, dropoff, date/time, weight/notes.";
+    if (/\b(dispute|problem|complaint|refund|damage)\b/.test(t))
+      return "Stacy: Thanks for reporting—logging this now and escalating if needed.";
+    if (/\b(track|eta|shipment|invoice|receipt)\b/.test(t))
+      return "Stacy: I can help with tracking & docs. Please share your load #.";
+    return "Stacy: Hi! How can I help with dispatch today?";
+  }
+  shouldEscalate(text) {
+    return /\b(connect to a human|human|escalate|urgent|non emergency serious|emergency|911)\b/i.test(text || "");
   }
 }
