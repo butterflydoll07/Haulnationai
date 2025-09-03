@@ -1,32 +1,43 @@
-import React, { useState } from "react";
+const API = "YOUR_BACKEND_URL"; // e.g. https://haulnation-backend.onrender.com
 
-export default function StacyChat() {
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
+// Tabs hookup
+const tabs = { stacy: "tab-stacy", axel: "tab-axel" };
+const panes = { stacy: "pane-stacy", axel: "pane-axel" };
+Object.keys(tabs).forEach(k => {
+  document.getElementById(tabs[k]).onclick = () => {
+    Object.values(tabs).forEach(id => document.getElementById(id).classList.remove("active"));
+    Object.values(panes).forEach(id => document.getElementById(id).classList.remove("active"));
+    document.getElementById(tabs[k]).classList.add("active");
+    document.getElementById(panes[k]).classList.add("active");
+  };
+});
 
-  const send = async () => {
-    const res = await fetch("/api/stacy", {
+// Stacy chat
+const msgsS = document.getElementById("msgs-stacy");
+function addS(text, me=false){
+  const div = document.createElement("div");
+  div.className = "msg " + (me ? "me" : "bot");
+  div.textContent = text;
+  msgsS.appendChild(div);
+  msgsS.scrollTop = msgsS.scrollHeight;
+}
+document.getElementById("send-stacy").onclick = async () => {
+  const i = document.getElementById("text-stacy");
+  const val = i.value.trim();
+  if (!val) return;
+  addS(val, true); i.value = "";
+  try {
+    const res = await fetch(`${API}/api/stacy`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: input }),
+      body: JSON.stringify({ message: val })
     });
     const data = await res.json();
-    setMessages([...messages, { sender: "user", text: input }, { sender: "bot", text: data.reply }]);
-    setInput("");
-  };
-
-  return (
-    <div style={{ padding: "1rem" }}>
-      <h2>Stacy (Dispatch)</h2>
-      <div style={{ height: "300px", overflowY: "auto", background: "#eee", padding: "1rem" }}>
-        {messages.map((m, i) => (
-          <div key={i} style={{ textAlign: m.sender === "user" ? "right" : "left" }}>
-            {m.text}
-          </div>
-        ))}
-      </div>
-      <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Type a message..." />
-      <button onClick={send}>Send</button>
-    </div>
-  );
-}
+    addS(data.reply, false);
+  } catch (e) {
+    addS("Error: cannot reach dispatch right now.", false);
+  }
+};
+document.getElementById("text-stacy").addEventListener("keydown", e => {
+  if (e.key === "Enter") document.getElementById("send-stacy").click();
+});
