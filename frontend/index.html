@@ -1,12 +1,73 @@
 <!doctype html>
 <html>
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8"/>
   <title>HaulNation – Stacy & Axel</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <style>
+    body{margin:0;font-family:system-ui,Arial;background:#f6f7f8;}
+    .tabs{display:flex;background:#111;color:#fff}
+    .tabs button{flex:1;padding:12px;border:none;background:#222;color:#fff}
+    .tabs button.active{background:#444}
+    .pane{height:calc(100vh - 48px);display:none}
+    .pane.active{display:block}
+    .chat{display:flex;flex-direction:column;height:100%}
+    .msgs{flex:1;overflow:auto;padding:12px}
+    .msg{margin:8px 0;max-width:70%;padding:8px 12px;border-radius:12px;display:inline-block}
+    .me{background:#0b72ff;color:#fff;margin-left:auto}
+    .bot{background:#e9ecef;color:#111;margin-right:auto}
+    .input{display:flex;gap:8px;padding:12px;background:#fff;border-top:1px solid #ddd}
+    input,button{font-size:16px}
+    input{flex:1;padding:10px;border:1px solid #ccc;border-radius:8px}
+    button{padding:10px 14px;border:0;border-radius:8px;background:#0b72ff;color:#fff}
+    .box{padding:16px}
+  </style>
 </head>
 <body>
-  <div id="root"></div>
-  <script type="module" src="./src/App.jsx"></script>
+  <div class="tabs">
+    <button id="tab-stacy" class="active">Stacy (Dispatch)</button>
+    <button id="tab-axel">Axel (Ops)</button>
+  </div>
+
+  <div id="pane-stacy" class="pane active">
+    <div class="chat">
+      <div id="msgs-stacy" class="msgs">
+        <div class="msg bot">Stacy: Hi! How can I help with dispatch today?</div>
+      </div>
+      <div class="input">
+        <input id="text-stacy" placeholder="Type a message…"/>
+        <button id="send-stacy">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="pane-axel" class="pane">
+    <div class="chat">
+      <div id="msgs-axel" class="msgs">
+        <div class="msg bot">Axel: Share location & destination to compute distance/ETA.</div>
+      </div>
+      <div class="input">
+        <input id="text-axel" placeholder="Ask Axel…"/>
+        <button id="send-axel">Send</button>
+      </div>
+    </div>
+
+    <div class="box">
+      <h3>Ops widgets</h3>
+      <div>Origin lat <input id="o-lat" size="8"> lng <input id="o-lng" size="8"></div>
+      <div>Dest   lat <input id="d-lat" size="8"> lng <input id="d-lng" size="8"></div>
+      <p>
+        <button id="btn-route">Get Distance & ETA</button>
+        <button id="btn-weather">Weather @ Origin</button>
+        <button id="btn-stops">Nearby Rest/Fuel</button>
+      </p>
+      <div id="route"></div>
+      <div id="weather"></div>
+      <ul id="stops"></ul>
+    </div>
+  </div>
+
+  <script type="module" src="./src/stacyClient.js"></script>
+  <script type="module" src="./src/axelClient.js"></script>
 </body>
-</html>
+      </html>
